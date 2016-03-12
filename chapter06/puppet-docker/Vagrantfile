@@ -1,47 +1,35 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.configure(2) do |config|
+VAGRANTFILE_API_VERSION = "2"
 
-  config.vm.box = "ubuntu/trusty64"
-  config.vm.provision "shell", inline: <<-SHELL
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.box = "ubuntu/trusty64"
+    config.vm.network "private_network", ip: "192.168.33.10"
+    HOSTNAME = 'docker'
+    DOMAIN   = 'media-glass.es'
+    Vagrant.require_version '>= 1.7.0'
+    config.ssh.insert_key = false
 
-  set -e
-  . /etc/lsb-release
-  REPO_DEB_URL="http://apt.puppetlabs.com/puppetlabs-release-${DISTRIB_CODENAME}.deb"
+  config.vm.host_name = HOSTNAME + '.' + DOMAIN
 
-  if [ "$(id -u)" != "0" ]; then
-    echo "This script must be run as root." >&2
-    exit 1
-  fi
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2024
+    v.cpus = 2
+  end
 
-  if which puppet > /dev/null 2>&1 && apt-cache policy | grep --quiet apt.puppetlabs.com; then
-    echo "Puppet is already installed."
-    exit 0
-  fi
+  config.vm.provider "vmware_fusion" do |v|
+    v.vmx["memsize"] = "2024"
+    v.vmx["numvcpus"] = "2"
+  end
 
-  echo "Initial apt-get update..."
-  apt-get update >/dev/null
-  echo "Installing wget..."
-  apt-get --yes install wget >/dev/null
-  echo "Configuring PuppetLabs repo..."
-  repo_deb_path=$(mktemp)
-  wget --output-document="${repo_deb_path}" "${REPO_DEB_URL}" 2>/dev/null
-  dpkg -i "${repo_deb_path}" >/dev/null
-  apt-get update >/dev/null
-  echo "Installing Puppet..."
-  DEBIAN_FRONTEND=noninteractive apt-get -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" install puppet >/dev/null
-  echo "Puppet installed!"
-  echo "Installing RubyGems..."
-  if [ "$DISTRIB_CODENAME" != "trusty" ]; then
-    apt-get --yes install rubygems >/dev/null
-  fi
-  gem install --no-ri --no-rdoc rubygems-update
-  update_rubygems >/dev/null
+$script = <<SCRIPT
 
-  echo "Installing Puppet Docker module..."
-  puppet module install garethr-docker
-  echo "Puppet Docker module installed!"
+sudo sh -c 'curl -fsS https://raw.githubusercontent.com/russmckendrick/puppet-install/master/ubuntu | bash'
+sudo puppet module install garethr-docker
 
-  SHELL
+SCRIPT
+
+config.vm.provision "shell",
+    inline: $script
 end
