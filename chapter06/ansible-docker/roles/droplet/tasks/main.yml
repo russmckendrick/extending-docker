@@ -51,3 +51,7 @@
    name: "{{ host02.droplet.ip_address }}"
    groups: "dockerhosts,dockerhost02"
   when: host02.droplet is defined
+
+- name: create the dynamic varible file for use later
+  template: src=dyn.yml.j2 dest=./group_vars/dyn.yml
+  delegate_to: localhost

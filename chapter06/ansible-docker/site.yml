@@ -24,7 +24,7 @@
     - docker-install
     - weave-install
 
-- name: "Connect the two Weave hosts"
+- name: "Connect the two Weave hosts and start MySQL container"
   hosts: dockerhost01
   remote_user: root
   gather_facts: False
@@ -34,3 +34,12 @@
 
   roles: 
     - weave-connect
+    - docker-mysql
+
+- name: "Start the Wordpress container"
+  hosts: dockerhost02
+  remote_user: root
+  gather_facts: False
+
+  roles: 
+    - docker-wordpress
