@@ -3,7 +3,7 @@
 - name: "Provision two droplets in DigitalOcean"
   hosts: localhost
   connection: local
-  gather_facts: False
+  gather_facts: True
 
   vars_files:
     - group_vars/environment.yml

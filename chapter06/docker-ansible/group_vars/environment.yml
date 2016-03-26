@@ -1,7 +1,6 @@
 ---
 # Det these parameters to control the name, region, keypair, and size of the droplet we are launching
 droplet_name: "extending-docker"
-ssh_key_name: "Russ Home"
 size_id: "1gb"
 region_id: "lon1"
 

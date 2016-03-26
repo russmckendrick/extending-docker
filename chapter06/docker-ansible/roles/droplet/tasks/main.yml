@@ -1,14 +1,22 @@
 ---
 
-- digital_ocean:
+- name: ensure ssh key exists
+  user:
+    name: '{{ ansible_user_id }}'
+    generate_ssh_key: yes
+    ssh_key_file: '.ssh/id_rsa'
+
+- name: ensure key exists at DigitalOcean
+  digital_ocean:
     state: present
     command: ssh
     name: '{{ ssh_key_name }}'
-    ssh_pub_key: '{{ ssh_pub_key }}'
+    ssh_pub_key: '{{ lookup("file", "~/.ssh/id_rsa.pub") }}'
     api_token: '{{ do_api_token }}'
   register: do_ssh_key
 
-- digital_ocean:
+- name: start our first host
+  digital_ocean:
     state: present
     command: droplet
     name: '{{ droplet_name }}-host01'
@@ -30,7 +38,8 @@
    groups: "dockerhosts,dockerhost01"
   when: host01.droplet is defined
 
-- digital_ocean:
+- name: start our second host
+  digital_ocean:
     state: present
     command: droplet
     name: '{{ droplet_name }}-host02'
