@@ -2,7 +2,7 @@
   "builders":[{
     "type": "docker",
     "image": "russmckendrick/nodejs",
-    "export_path": "image.tar"
+    "export_path": "mobycounter.tar"
   }],
   "provisioners":[
     {
