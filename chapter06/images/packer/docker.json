@@ -8,8 +8,13 @@
     {
       "type": "file",
       "source": "app",
-      "destination": "/srv/app"
+      "destination": "/srv"
     }, 
+    {
+      "type": "file",
+      "source": "npmrc",
+      "destination": "/etc/npmrc"
+    },
     {
       "type": "shell",
       "inline": [

@@ -8,7 +8,7 @@
     {
       "type": "file",
       "source": "app",
-      "destination": "/srv/app"
+      "destination": "/srv"
     }, 
     {
       "type": "file",
