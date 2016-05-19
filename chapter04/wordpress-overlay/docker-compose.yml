@@ -9,10 +9,9 @@ services:
       - wpoutside
       - wpinside
     environment:
-      WORDPRESS_DB_HOST: "mysql:3306"
-      WORDPRESS_DB_PASSWORD: "password"
-    labels:
-      constraint: "node==chapter04-01"
+      - "WORDPRESS_DB_HOST=mysql:3306"
+      - "WORDPRESS_DB_PASSWORD=password"
+     - "constraint:node==chapter04-01"
     volumes:
       - "uploads:/var/www/html/wp-content/uploads/"
   mysql:
@@ -21,9 +20,8 @@ services:
     networks:
       - wpinside
     environment:
-      MYSQL_ROOT_PASSWORD: "password"
-    labels:
-      constraint: "node==chapter04-02"
+      - "MYSQL_ROOT_PASSWORD=password"
+      - "constraint:node==chapter04-02"
     volumes:
       - "database:/var/lib/mysql"
 volumes:
